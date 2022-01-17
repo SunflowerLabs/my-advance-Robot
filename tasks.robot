@@ -18,11 +18,13 @@ Library           RPA.Tables
 Library           RPA.Desktop
 Library           RPA.Tasks
 Library           RPA.Archive
+Library           RPA.Dialogs
 
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
     Open Order Web Site
-    Download the orders file
+    ${user_input}    Taking User Input for URL of order csv
+    Download the orders file    ${user_input}
     Fill the order using data from the csv File
     Creating a Zip archives
     Log out and close the browser
@@ -43,8 +45,17 @@ Open Order Web Site
     Click Element If Visible    xpath://button[contains(.,'OK')]
 
 *** Keywords ***
+Taking User Input for URL of order csv
+    Add heading    Advance Order Robot
+    Add text input    DownloadSite    label=Enter URL of the orders CSV file
+    ${user_input}    Run dialog    height=500    width=400    title=Advance Order Robot
+    [Return]    ${user_input}
+
+*** Keywords ***
 Download the orders file
-    Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
+    [Arguments]    ${user_input}
+    Download    ${user_input.DownloadSite}    overwrite=True
+    #Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
 
 *** Keywords ***
 Fill the order using data from the csv File
